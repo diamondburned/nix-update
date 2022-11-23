@@ -49,6 +49,7 @@ class Package:
     changelog: str | None
     rev: str
     hash: str | None
+    output_hash: str | None
     go_modules: str | None
     go_modules_old: str | None
     cargo_deps: str | None
@@ -145,6 +146,7 @@ in {{
   hash = pkg.src.outputHash or null;
   go_modules = pkg.goModules.outputHash or null;
   go_modules_old = pkg.go-modules.outputHash or null;
+  output_hash = pkg.outputHash or null;
   cargo_deps = pkg.cargoDeps.outputHash or null;
   raw_cargo_lock =
     if pkg ? cargoDeps.lockFile then

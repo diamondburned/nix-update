@@ -145,6 +145,12 @@ def update_src_hash(opts: Options, filename: str, current_hash: str) -> None:
     replace_hash(filename, current_hash, target_hash)
 
 
+def update_output_hash(opts: Options, filename: str, current_hash: str) -> None:
+    expr = f"(import {opts.import_path} {disable_check_meta(opts)}).{opts.attribute}"
+    target_hash = nix_prefetch(expr)
+    replace_hash(filename, current_hash, target_hash)
+
+
 def update_go_modules_hash(opts: Options, filename: str, current_hash: str) -> None:
     target_hash = nix_prefetch(opts, "goModules")
     replace_hash(filename, current_hash, target_hash)
@@ -353,6 +359,9 @@ def update(opts: Options) -> Package:
 
     # if no package.hash was provided we just update the other hashes unconditionally
     if update_hash or not package.hash:
+        if package.output_hash:
+            update_output_hash(opts, package.filename, package.output_hash)
+
         if package.go_modules:
             update_go_modules_hash(opts, package.filename, package.go_modules)
 
